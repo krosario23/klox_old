@@ -5,4 +5,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#define DEBIG_TRACE_EXECUTION
+
 #endif
