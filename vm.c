@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "common.h"
+#include "compiler.h"
 #include "debug.h"
 #include "vm.h"
 
@@ -38,7 +39,7 @@ static result run() {
                printf(" ]");
           }
 
-          disassemble_instruction(vm.chunk, (int)(vm.ip - vm.chunk->code))
+          disassemble_instruction(vm.chunk, (int)(vm.ip - vm.chunk->code));
 #endif
           uint8_t instruction;
           switch (instruction = READ_BYTE()) {
@@ -65,10 +66,9 @@ static result run() {
 #undef BINARY_OP
 }
 
-result interpret(chunk* chunk) {
-     vm.chunk = chunk;
-     vm.ip = vm.chunk->code;
-     return run();
+result interpret(const char* source) {
+     compile(source);
+     return RESULT_OK;
 }
 
 void push(value value) {
