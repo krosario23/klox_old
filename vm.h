@@ -7,9 +7,9 @@
 #define STACK_MAX 1024
 
 typedef struct {
-     chunk* chunk;
-     uint8_t* ip;
-     value stack[STACK_MAX];
+     chunk* chunk;                 //the chunk fed to the VM to be interpreted
+     uint8_t* ip;                  //instruction pointer
+     value stack[STACK_MAX];       
      value* stack_top;
 } VM;
 

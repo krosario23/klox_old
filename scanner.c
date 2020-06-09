@@ -43,6 +43,7 @@ static char peek() {
      return *scan.current;
 }
 
+//return the next character in the source string
 static char peek_next() {
      if (is_at_end()) return '\0';
      return scan.current[1];
@@ -68,6 +69,7 @@ static token make_token(token_type type) {
      return tok;
 }
 
+//similar to make_token(), but always returns an error token with an error message
 static token error_token(const char* msg) {
      token tok;
      tok.type = TOKEN_ERROR;
@@ -78,6 +80,8 @@ static token error_token(const char* msg) {
      return tok;
 }
 
+/*   mini-scanner that skips whitespace and comments, also increments the line
+     counter when a newline is found */
 static void skip_whitespace() {
      for (;;) {
           char c = peek();
@@ -102,6 +106,8 @@ static void skip_whitespace() {
      }
 }
 
+/*   helper function that helps us match the remaining text in a lexeme to a
+     given keyword */
 static token_type check_keyword(int start, int length, const char* rest,
                                 token_type type) {
      if (scan.current - scan.start == start + length &&
@@ -112,6 +118,9 @@ static token_type check_keyword(int start, int length, const char* rest,
      return TOKEN_IDENTIFIER;
 }
 
+/*   a trie that starts at the beginning of the current lexeme and scans through
+     switches off the subsequent characters to find an existing keyword, if no
+     the lexeme matches no keywords, it is an identifier */
 static token_type identifier_type() {
      switch (scan.start[0]) {
           case 'a': return check_keyword(1, 2, "nd", TOKEN_AND);
