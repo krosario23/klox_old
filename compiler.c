@@ -152,7 +152,7 @@ static void binary() {
      parse_prec((precedence)(rule->prec + 1));
 
      switch (operator) {
-          case TOKEN_BANG_EQUAL:    emit_bytes(OP_EQUAL, OP_NOT); break;  
+          case TOKEN_BANG_EQUAL:    emit_bytes(OP_EQUAL, OP_NOT); break;
           case TOKEN_EQUAL_EQUAL:   emit_byte(OP_EQUAL); break;
           case TOKEN_GREATER:       emit_byte(OP_GREATER); break;
           case TOKEN_GREATER_EQUAL: emit_bytes(OP_LESS, OP_NOT); break;
@@ -185,6 +185,11 @@ static void grouping() {
 static void number() {
      double val = strtod(parse.previous.start, NULL);
      emit_constant(NUMBER_VAL(val));
+}
+
+static void string() {
+     emit_constant(OBJ_VAL(copy_string(parse.previous.start + 1,
+                                       parse.previous.length - 2)));
 }
 
 static void unary() {
@@ -223,7 +228,7 @@ parse_rule rules[] = {
      { NULL,     binary,  PREC_COMPARISON }, // TOKEN_LESS
      { NULL,     binary,  PREC_COMPARISON }, // TOKEN_LESS_EQUAL
      { NULL,     NULL,    PREC_NONE },       // TOKEN_IDENTIFIER
-     { NULL,     NULL,    PREC_NONE },       // TOKEN_STRING
+     { string,   NULL,    PREC_NONE },       // TOKEN_STRING
      { number,   NULL,    PREC_NONE },       // TOKEN_NUMBER
      { NULL,     NULL,    PREC_NONE },       // TOKEN_AND
      { NULL,     NULL,    PREC_NONE },       // TOKEN_CLASS

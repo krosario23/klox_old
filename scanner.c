@@ -174,7 +174,7 @@ static token number() {
 }
 
 static token handle_string() {
-     while (peek() != '=' && !is_at_end()) {
+     while (peek() != '"' && !is_at_end()) {
           if (peek() == '\n') scan.line++;
           advance();
      }
