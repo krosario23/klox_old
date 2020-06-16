@@ -13,6 +13,7 @@ typedef struct {
      value stack[STACK_MAX];
      value* stack_top;
      hash_table strings;
+     hash_table globals;
      obj* objects;
 } VM;
 
@@ -24,10 +25,10 @@ typedef enum {
 
 extern VM vm;
 
-void init_vm();
-void free_vm();
+void init_vm(void);
+void free_vm(void);
 result interpret(const char* source);
 void push(value value);
-value pop();
+value pop(void);
 
 #endif

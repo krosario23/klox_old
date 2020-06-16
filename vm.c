@@ -33,10 +33,12 @@ static void runtime_error(const char* format, ...) {
 void init_vm() {
      reset_stack();
      vm.objects = NULL;
+     init_table(&vm.globals);
      init_table(&vm.strings);
 }
 
 void free_vm() {
+     free_table(&vm.globals);
      free_table(&vm.strings);
      free_objects();
 }
@@ -77,6 +79,7 @@ static void concatenate() {
 static result run() {
 #define READ_BYTE() (*vm.ip++)
 #define READ_CONSTANT() (vm.chunk->constants.values[READ_BYTE()])
+#define READ_STRING() AS_STRING(READ_CONSTANT())
 #define BINARY_OP(val_type, op) \
      do { \
           if (!IS_NUMBER(peek(0)) || !IS_NUMBER(peek(1))) { \
@@ -88,6 +91,7 @@ static result run() {
           double a = AS_NUMBER(pop()); \
           push(val_type(a op b)); \
      } while (false)
+
 
      for (;;) {
 #ifdef DEBUG_TRACE_EXECUTION
@@ -113,6 +117,32 @@ static result run() {
                case OP_NULL:   push(NULL_VAL); break;
                case OP_TRUE:   push(BOOL_VAL(true)); break;
                case OP_FALSE:  push(BOOL_VAL(false)); break;
+               case OP_POP:    pop(); break;
+               case OP_GET_GLOBAL: {
+                    obj_string* name = READ_STRING();
+                    value val;
+                    if (!table_get(&vm.globals, name, &val)) {
+                         runtime_error("undefined variable '%s'", name->chars);
+                         return RESULT_RUNTIME_ERROR;
+                    }
+                    push(val);
+                    break;
+               }
+               case OP_DEFINE_GLOBAL: {
+                    obj_string* name = READ_STRING();
+                    table_set(&vm.globals, name, peek(0));
+                    pop();
+                    break;
+               }
+               case OP_SET_GLOBAL: {
+                    obj_string* name = READ_STRING();
+                    if (table_set(&vm.globals, name, peek(0))) {
+                         table_delete(&vm.globals, name);
+                         runtime_error("undefined variable '%s'", name->chars);
+                         return RESULT_RUNTIME_ERROR;
+                    }
+                    break;
+               }
                case OP_EQUAL:  {
                     value b = pop();
                     value a = pop();
@@ -150,9 +180,12 @@ static result run() {
                     push(BOOL_VAL(is_falsey(pop())));
                     break;
                }
-               case OP_RETURN: {
+               case OP_PRINT: {
                     print_value(pop());
                     printf("\n");
+                    break;
+               }
+               case OP_RETURN: {
                     return RESULT_OK;
                }
           }
@@ -160,6 +193,7 @@ static result run() {
 
 #undef READ_BYTE
 #undef READ_CONSTANT
+#undef REAS_STRING
 #undef BINARY_OP
 }
 

@@ -19,6 +19,6 @@
           sizeof(type) * (count))
 
 void* reallocate(void* previous, size_t old_size, size_t new_size);
-void free_objects();
+void free_objects(void);
 
 #endif
