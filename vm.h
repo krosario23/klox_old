@@ -8,19 +8,19 @@
 #define STACK_MAX 1024
 
 typedef struct {
-     chunk* chunk;                 //the chunk fed to the VM to be interpreted
-     uint8_t* ip;                  //instruction pointer
-     value stack[STACK_MAX];
-     value* stack_top;
-     hash_table strings;
-     hash_table globals;
-     obj* objects;
+    chunk* chunk;                 //the chunk fed to the VM to be interpreted
+    uint8_t* ip;                  //instruction pointer
+    value stack[STACK_MAX];
+    value* stack_top;
+    hash_table strings;
+    hash_table globals;
+    obj* objects;
 } VM;
 
 typedef enum {
-     RESULT_OK,
-     RESULT_COMPILE_ERROR,
-     RESULT_RUNTIME_ERROR
+    RESULT_OK,
+    RESULT_COMPILE_ERROR,
+    RESULT_RUNTIME_ERROR
 } result;
 
 extern VM vm;
