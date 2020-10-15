@@ -17,20 +17,20 @@
 #define AS_CSTRING(val)       (((obj_string*)AS_OBJ(val))->chars)
 
 typedef enum {
-    OBJ_STRING,
+     OBJ_STRING,
 } obj_type;
 
 //a sort of abstract base struct for our different type of objects
 struct s_obj {
-    obj_type type;
-    struct s_obj* next;
+     obj_type type;
+     struct s_obj* next;
 };
 
 struct s_obj_string {
-    obj object;
-    int length;
-    char* chars;
-    uint32_t hash;
+     obj object;
+     int length;
+     char* chars;
+     uint32_t hash;
 };
 
 obj_string* take_string(char* chars, int length);
@@ -39,7 +39,7 @@ void print_object(value val);
 
 //verifies that the given value is actually of the given type
 static inline bool is_obj_type(value val, obj_type type) {
-    return IS_OBJ(val) && AS_OBJ(val)->type == type;
+     return IS_OBJ(val) && AS_OBJ(val)->type == type;
 }
 
 #endif

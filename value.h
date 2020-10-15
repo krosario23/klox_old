@@ -7,20 +7,20 @@ typedef struct s_obj obj;
 typedef struct s_obj_string obj_string;
 
 typedef enum {
-    VAL_BOOL,
-    VAL_NULL,
-    VAL_NUMBER,
-    VAL_OBJ,
+     VAL_BOOL,
+     VAL_NULL,
+     VAL_NUMBER,
+     VAL_OBJ,
 } val_type;
 
 //a tagged union that lets us represent different values
 typedef struct {
-    val_type type;           //type tag
-    union {                  //union field that contains underlying values
-        bool boolean;
-        double number;
-        obj* object;
-    } as;
+     val_type type;           //type tag
+     union {                  //union field that contains underlying values
+          bool boolean;
+          double number;
+          obj* object;
+     } as;
 } value;
 
 //these macros verify that we are using are the correct type
@@ -42,9 +42,9 @@ typedef struct {
 
 //val_array represents the constant pool associated with each chunk
 typedef struct {
-    int count;
-    int capacity;
-    value* values;
+     int count;
+     int capacity;
+     value* values;
 } val_array;
 
 bool values_equal(value a, value b);
